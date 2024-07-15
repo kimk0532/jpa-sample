@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface SampleRepository extends JpaRepository<Program, String>, SampleCustomRepository {
+public interface SampleRepository extends JpaRepository<Program, String>, SampleRepositoryCustom {
 
 //    List<Program> findByProjectNo(String projectNo);
 

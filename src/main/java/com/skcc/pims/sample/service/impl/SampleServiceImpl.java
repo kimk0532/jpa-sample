@@ -1,7 +1,6 @@
 package com.skcc.pims.sample.service.impl;
 
 import com.skcc.pims.model.Program;
-import com.skcc.pims.sample.repository.SampleCustomRepository;
 import com.skcc.pims.sample.repository.SampleRepository;
 import com.skcc.pims.sample.service.SampleService;
 import lombok.RequiredArgsConstructor;
