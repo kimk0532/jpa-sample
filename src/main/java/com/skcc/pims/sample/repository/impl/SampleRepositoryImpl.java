@@ -1,22 +1,21 @@
 package com.skcc.pims.sample.repository.impl;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.skcc.pims.model.Program;
-import com.skcc.pims.model.QProgram;
+import com.skcc.pims.model.QCodeItem;
+import com.skcc.pims.sample.dto.result.ProgramResultDto;
+import com.skcc.pims.sample.dto.result.QProgramResultDto;
 import com.skcc.pims.sample.repository.SampleRepositoryCustom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-import static com.skcc.pims.model.QCodeItem.codeItem;
 import static com.skcc.pims.model.QProgram.program;
 import static org.springframework.util.StringUtils.*;
 
@@ -27,24 +26,54 @@ public class SampleRepositoryImpl implements SampleRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Program> findByProjectNo(String projectNo) {
+    public List<ProgramResultDto> findByProjectNo(String projectNo) {
 
-        BooleanBuilder builder = new BooleanBuilder();
-        if (hasText(projectNo)) {
-            builder.and(program.projectNo.eq(projectNo));
-        }
-
+        QCodeItem programDivCodeItem = new QCodeItem("programDivCodeItem");
+        QCodeItem difficultyDivCodeItem = new QCodeItem("difficultyDivCodeItem");
+        QCodeItem weightyCdCodeItem = new QCodeItem("weightyCdCodeItem");
 
         return jpaQueryFactory
-                .selectFrom(program)
-                .leftJoin(program.project).fetchJoin()
-                .leftJoin(codeItem).fetchJoin()
+                .select(new QProgramResultDto(
+                        program.projectNo,
+                        program.programUid,
+                        program.subProjectNo,
+                        program.difficultyDiv,
+                        difficultyDivCodeItem.codeName.as("difficultyDivName")
+                        )
+                )
+                .from(program)
+                .leftJoin(program.project)
+                .leftJoin(programDivCodeItem)
                 .on(
-                        program.projectNo.eq(codeItem.projectUid),
-                        program.programDiv.eq(codeItem.codeXd),
-                        codeItem.codeGroupId.eq("CG_PJGUBUN"),
-                        codeItem.localeXd.eq("ko_KR"),
-                        codeItem.useYn.eq("Y")
+                        program.projectNo.eq(programDivCodeItem.projectUid),
+                        program.programDiv.eq(programDivCodeItem.codeXd),
+                        programDivCodeItem.codeGroupId.eq("CG_PJGUBUN"),
+                        programDivCodeItem.localeXd.eq("ko_KR"),
+                        programDivCodeItem.useYn.eq("Y")
+                )
+                .leftJoin(difficultyDivCodeItem)
+                .on(
+                        program.projectNo.eq(difficultyDivCodeItem.projectUid),
+                        program.difficultyDiv.eq(difficultyDivCodeItem.codeXd),
+                        difficultyDivCodeItem.codeGroupId.eq("CG_PJDEGREE_C_P"),
+                        difficultyDivCodeItem.localeXd.eq("ko_KR"),
+                        difficultyDivCodeItem.useYn.eq("Y")
+                )
+                .leftJoin(programDivCodeItem)
+                .on(
+                        program.projectNo.eq(programDivCodeItem.projectUid),
+                        program.programDiv.eq(programDivCodeItem.codeXd),
+                        programDivCodeItem.codeGroupId.eq("CG_PJGUBUN"),
+                        programDivCodeItem.localeXd.eq("ko_KR"),
+                        programDivCodeItem.useYn.eq("Y")
+                )
+                .leftJoin(weightyCdCodeItem)
+                .on(
+                        program.projectNo.eq(weightyCdCodeItem.projectUid),
+                        program.programDiv.eq(weightyCdCodeItem.codeXd),
+                        weightyCdCodeItem.codeGroupId.eq("CG_IMPORTANCE_C_P"),
+                        weightyCdCodeItem.localeXd.eq("ko_KR"),
+                        weightyCdCodeItem.useYn.eq("Y")
                 )
                 .where(
                         program.projectNo.eq(projectNo),
@@ -60,16 +89,21 @@ public class SampleRepositoryImpl implements SampleRepositoryCustom {
 
     @Override
     public Page<Program> searchPageSimple(String projectNo, Pageable pageable) {
+
+        QCodeItem programDivCodeItem = new QCodeItem("programDivCodeItem");
+        QCodeItem difficultyDivCodeItem = new QCodeItem("difficultyDivCodeItem");
+        QCodeItem weightyCdCodeItem = new QCodeItem("weightyCdCodeItem");
+
         QueryResults<Program> results = jpaQueryFactory
                 .selectFrom(program)
                 .leftJoin(program.project).fetchJoin()
-                .leftJoin(codeItem).fetchJoin()
+                .leftJoin(programDivCodeItem).fetchJoin()
                 .on(
-                        program.projectNo.eq(codeItem.projectUid),
-                        program.programDiv.eq(codeItem.codeXd),
-                        codeItem.codeGroupId.eq("CG_PJGUBUN"),
-                        codeItem.localeXd.eq("ko_KR"),
-                        codeItem.useYn.eq("Y")
+                        program.projectNo.eq(programDivCodeItem.projectUid),
+                        program.programDiv.eq(programDivCodeItem.codeXd),
+                        programDivCodeItem.codeGroupId.eq("CG_PJGUBUN"),
+                        programDivCodeItem.localeXd.eq("ko_KR"),
+                        programDivCodeItem.useYn.eq("Y")
                 )
                 .where(
                         program.projectNo.eq(projectNo),

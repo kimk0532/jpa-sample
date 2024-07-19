@@ -1,6 +1,7 @@
 package com.skcc.pims.sample.service.impl;
 
 import com.skcc.pims.model.Program;
+import com.skcc.pims.sample.dto.result.ProgramResultDto;
 import com.skcc.pims.sample.repository.SampleRepository;
 import com.skcc.pims.sample.service.SampleService;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +15,10 @@ import java.util.List;
 public class SampleServiceImpl implements SampleService {
 
     private final SampleRepository sampleRepository;
-//    private final SampleCustomRepository sampleCustomRepository;
 
     @Override
     @Transactional
-    public List<Program> getPrograms(String projectNo) {
+    public List<ProgramResultDto> getPrograms(String projectNo) {
         return sampleRepository.findByProjectNo(projectNo);
     }
 

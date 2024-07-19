@@ -1,248 +1,195 @@
-SELECT
-        a.*
-        ,k.code_name as weighty_name
-        ,d.code_name AS difficulty_div_name
-        ,b.code_name AS gubun_code_name
-        ,c.user_name ||'('||a.charger_id||')' AS charger_name
-        ,f.user_name||'('||a.charger_pl_id||')'  as charger_pl_name
-        ,g.user_name||'('||a.test_charger_id||')' as test_charger_name
-        ,h.user_name||'('||a.customer_charger_id||')' as customer_charger_name
-        ,CASE
-            WHEN 1 = 1 THEN  c.user_name
-            WHEN 1 = 2 THEN  f.user_name
-            WHEN 1 = 3 THEN  g.user_name
-            WHEN 1 = 4 THEN  h.user_name
-        END  work_name
-        ,l.code_name as status_name
-        ,j.code_name as link_name
-        ,case when a.approval_yn = 'N' and real_progress_rate_apv = '100' then '승인완료' else n.code_name end as approval_status_name
-        ,m.code_name as regist_type_name
-FROM(
-    SELECT 
-         a.project_no
-        ,a.program_uid                                  
-        ,a.sub_project_no 
-        ,l4
-        ,l5
-        ,a.difficulty_div
-        ,a.program_div                              
-        ,a.regist_type_div                          
-        ,a.program_id                               
-        ,a.program_name                             
-        ,a.link_code
-        ,a.program_div AS gubun_code            
-        ,a.plan_start_dt1               
-        ,a.plan_end_dt1 
-        ,a.real_start_dt1           
-        ,a.real_end_dt1 
-        ,a.plan_start_dt                
-        ,a.plan_end_dt 
-        ,a.source_code
-        ,a.program_explan
-        ,a.change_content
-        ,a.change_dt
-        ,CASE WHEN a.approval_tab_id = 1 THEN trim(a.approval_real_start_dt,' ')  ELSE trim(a.real_start_dt,' ')  END as real_start_dt              
-        ,CASE WHEN a.approval_tab_id = 1 THEN trim(a.approval_real_end_dt,' ')   ELSE trim(a.real_end_dt,' ') END as real_end_dt 
-        ,a.pl_plan_start_dt                 
-        ,a.pl_plan_end_dt 
-        ,CASE WHEN a.approval_tab_id = 2 THEN trim(a.approval_real_start_dt,' ') ELSE trim(a.pl_real_start_dt,' ') END as pl_real_start_dt              
-        ,CASE WHEN a.approval_tab_id = 2 THEN trim(a.approval_real_end_dt,' ') ELSE trim(a.pl_real_end_dt,' ')  END as pl_real_end_dt 
-        ,a.test_plan_start_dt               
-        ,a.test_plan_end_dt 
-        ,CASE WHEN a.approval_tab_id = 3 THEN trim(a.approval_real_start_dt,' ') ELSE trim(a.test_real_start_dt,' ') END as test_real_start_dt              
-        ,CASE WHEN a.approval_tab_id = 3 THEN trim(a.approval_real_end_dt,' ') ELSE trim(a.test_real_end_dt,' ') END as test_real_end_dt 
-        ,a.customer_plan_start_dt               
-        ,a.customer_plan_end_dt 
-        ,CASE WHEN a.approval_tab_id = 4 THEN trim(a.approval_real_start_dt,' ') ELSE trim(a.customer_real_start_dt,' ') END as customer_real_start_dt              
-        ,CASE WHEN a.approval_tab_id = 4 THEN trim(a.approval_real_end_dt,' ') ELSE trim(a.customer_real_end_dt,' ') END as customer_real_end_dt 
-        ,real_progress_rate as real_progress_rate_apv
-        ,a.real_progress_rate1 as real_progress_rate    
-        ,a.real_progress_rate1 as real_progress_rate_org
-        ,a.plan_progress_rate1 as plan_progress_rate
-        , '' AS real_progress_rateEnumKeys
-        , '' AS real_progress_rateEnum
-        ,'' as real_progress_rateCanEdit
-        ,'' as real_start_dt1CanEdit
-        ,'' as real_end_dt1CanEdit
-        ,a.sub_project_name 
-        ,a.charger_id AS charger_id             
-        ,a.charger_pl_id
-        ,a.test_charger_id
-        ,a.customer_charger_id
-        ,CASE 
-            WHEN 1 = 1 THEN  a.charger_id
-            WHEN 1 = 2 THEN  a.charger_pl_id
-            WHEN 1 = 3 THEN  a.test_charger_id
-            WHEN 1 = 4 THEN  a.customer_charger_id
-        END  as work_id
-        ,a.work_dt as work_dt
-        ,a.pl_work_dt as pl_work_dt
-        ,a.test_work_dt as test_work_dt
-        ,a.cust_work_dt as cust_work_dt
-        ,cast(a.crtr_dt as date) as crtr_dt
-        ,a.program_content
-        ,a.pl_cmt
-        ,a.test_cmt
-        ,a.cust_cmt
-        ,a.proc_id
-        ,a.proc_name
-        ,a.req_id
-        ,a.file_name
-        ,a.workingday1
-        ,a.workingday2
-        ,a.workingday3
-        ,a.workingday4
-        ,a.status_cd
-        ,a.approval_yn
-        ,a.approval_status_cd
-        ,'' as No
-        ,'' as image
-        ,a.etc1  AS etc1
-        ,a.etc2  AS etc2
-        ,a.etc3  AS etc3
-        ,a.etc4  AS etc4
-        ,a.etc5  AS etc5
-        ,a.etc6  AS etc6
-        ,a.etc7  AS etc7
-        ,a.etc8  AS etc8
-        ,a.etc9  AS etc9
-        ,a.etc10 AS etc10
-        ,a.etc11 AS etc11
-        ,a.etc12 AS etc12
-        ,a.etc13 AS etc13
-        ,a.etc14 AS etc14
-        ,a.etc15 AS etc15
-        ,a.etc16 AS etc16
-        ,a.etc17 AS etc17
-        ,a.etc18 AS etc18
-        ,a.etc19 AS etc19
-        ,a.etc20 AS etc20
-        ,a.weighty_cd
-        ,a.inspection_yn
-        ,a.return_comment
-        /*, (select qms_link_yn from tb_pj_project where project_no = a.project_no and sub_project_no = '0') as inspection_yn*/
-        ,status_sub
-        ,cast((select count(*) from tb_pj_program_file fc
+
+select
+      k.code_name as weighty_name
+     ,d.code_name AS difficulty_div_name
+     ,b.code_name AS gubun_code_name
+     ,l.code_name as status_name
+     ,j.code_name as link_name
+     ,m.code_name as regist_type_name
+     ,c.user_name ||'('||a.charger_id||')' AS charger_name
+     ,f.user_name||'('||a.charger_pl_id||')'  as charger_pl_name
+     ,g.user_name||'('||a.test_charger_id||')' as test_charger_name
+     ,h.user_name||'('||a.customer_charger_id||')' as customer_charger_name
+     ,CASE
+          WHEN 1 = 1 THEN  c.user_name
+          WHEN 1 = 2 THEN  f.user_name
+          WHEN 1 = 3 THEN  g.user_name
+          WHEN 1 = 4 THEN  h.user_name
+      END  work_name
+     ,case when a.approval_yn = 'N' and real_progress_rate = '100' then '승인완료' else n.code_name end as approval_status_name
+     ,a.project_no
+     ,a.program_uid
+     ,a.sub_project_no
+     ,a.l4
+     ,a.l5
+     ,a.difficulty_div
+     ,a.program_div
+     ,a.regist_type_div
+     ,a.program_id
+     ,a.program_name
+     ,a.link_code
+     ,a.program_div AS gubun_code
+     ,a.plan_start_dt
+     ,a.plan_end_dt
+     ,a.source_code
+     ,a.program_explan
+     ,a.change_content
+     ,a.change_dt
+     ,CASE WHEN a.approval_tab_id = 1 THEN trim(a.approval_real_start_dt,' ')  ELSE trim(a.real_start_dt,' ')  END as real_start_dt
+     ,CASE WHEN a.approval_tab_id = 1 THEN trim(a.approval_real_end_dt,' ')   ELSE trim(a.real_end_dt,' ') END as real_end_dt
+     ,a.pl_plan_start_dt
+     ,a.pl_plan_end_dt
+     ,CASE WHEN a.approval_tab_id = 2 THEN trim(a.approval_real_start_dt,' ') ELSE trim(a.pl_real_start_dt,' ') END as pl_real_start_dt
+     ,CASE WHEN a.approval_tab_id = 2 THEN trim(a.approval_real_end_dt,' ') ELSE trim(a.pl_real_end_dt,' ')  END as pl_real_end_dt
+     ,a.test_plan_start_dt
+     ,a.test_plan_end_dt
+     ,CASE WHEN a.approval_tab_id = 3 THEN trim(a.approval_real_start_dt,' ') ELSE trim(a.test_real_start_dt,' ') END as test_real_start_dt
+     ,CASE WHEN a.approval_tab_id = 3 THEN trim(a.approval_real_end_dt,' ') ELSE trim(a.test_real_end_dt,' ') END as test_real_end_dt
+     ,a.customer_plan_start_dt
+     ,a.customer_plan_end_dt
+     ,CASE WHEN a.approval_tab_id = 4 THEN trim(a.approval_real_start_dt,' ') ELSE trim(a.customer_real_start_dt,' ') END as customer_real_start_dt
+     ,CASE WHEN a.approval_tab_id = 4 THEN trim(a.approval_real_end_dt,' ') ELSE trim(a.customer_real_end_dt,' ') END as customer_real_end_dt
+     ,a.real_progress_rate1 as real_progress_rate
+     ,a.plan_progress_rate1 as plan_progress_rate
+     ,a.sub_project_name
+     ,a.charger_id
+     ,a.charger_pl_id
+     ,a.test_charger_id
+     ,a.customer_charger_id
+     ,CASE
+          WHEN 1 = 1 THEN  a.charger_id
+          WHEN 1 = 2 THEN  a.charger_pl_id
+          WHEN 1 = 3 THEN  a.test_charger_id
+          WHEN 1 = 4 THEN  a.customer_charger_id
+    	END  as work_id
+     ,a.work_dt
+     ,a.pl_work_dt
+     ,a.test_work_dt
+     ,a.cust_work_dt
+     ,cast(a.crtr_dt as date) as crtr_dt
+     ,a.program_content
+     ,a.pl_cmt
+     ,a.test_cmt
+     ,a.cust_cmt
+     ,a.proc_id
+     ,a.proc_name
+     ,a.req_id
+     ,a.file_name
+     ,a.workingday1
+     ,a.workingday2
+     ,a.workingday3
+     ,a.workingday4
+     ,a.status_cd
+     ,a.approval_yn
+     ,a.approval_status_cd
+     ,a.etc1  AS etc1
+     ,a.etc2  AS etc2
+     ,a.etc3  AS etc3
+     ,a.etc4  AS etc4
+     ,a.etc5  AS etc5
+     ,a.etc6  AS etc6
+     ,a.etc7  AS etc7
+     ,a.etc8  AS etc8
+     ,a.etc9  AS etc9
+     ,a.etc10 AS etc10
+     ,a.etc11 AS etc11
+     ,a.etc12 AS etc12
+     ,a.etc13 AS etc13
+     ,a.etc14 AS etc14
+     ,a.etc15 AS etc15
+     ,a.etc16 AS etc16
+     ,a.etc17 AS etc17
+     ,a.etc18 AS etc18
+     ,a.etc19 AS etc19
+     ,a.etc20 AS etc20
+     ,a.weighty_cd
+     ,a.inspection_yn
+     ,a.return_comment
+     ,a.status_sub
+     ,cast((select count(*) from tb_pj_program_file fc
             where fc.project_no = a.project_no and fc.program_uid = a.program_uid and fc.step_no = 1  limit 1 ) as varchar)as file_cnt
-        ,count(1) over() as totcnt
-        ,row_number() over(ORDER BY sub_project_order desc, l4 desc, l5 desc, coalesce(a.plan_end_dt1,'') desc , a.program_id desc) as num
-     FROM (
-        SELECT
-            a.*
-                ,CASE
-                    WHEN a.plan_end_dt is null or trim(a.plan_end_dt) = '' then ''
-                    when a.real_progress_rate >= 90 and '2024-07-05' > a.plan_end_dt then '완료'
-                    WHEN a.real_end_dt <> '' AND cast(a.plan_end_dt AS date) > cast(a.real_end_dt AS date) THEN '초과성과'
-                    WHEN a.real_end_dt <> '' THEN '완료'
-                    WHEN (a.real_end_dt is null or a.real_end_dt = '') and cast(a.plan_end_dt as date) < cast('2024-07-05' as date) then '지연'
-                    WHEN cast(a.plan_start_dt as date) > current_date and (a.real_start_dt is null or a.real_start_dt = '') THEN '미착수'
-                    ELSE '진행'
-                END as status_sub
-            ,CASE
-                WHEN real_progress_rate1 = 100 AND (a.approval_yn = '' or a.approval_yn is null) AND plan_progress_rate1 < real_progress_rate1 THEN '003'
-                WHEN real_progress_rate1 = 100 AND (a.approval_yn = '' or a.approval_yn is null) THEN '005'
-                WHEN plan_progress_rate1 < real_progress_rate1 THEN '003'
-              WHEN plan_progress_rate1 = 0 THEN '001'
-              ELSE (
-                        CASE WHEN plan_progress_rate1 > real_progress_rate1 THEN '002'
-                             WHEN plan_progress_rate1 < real_progress_rate1 THEN '003'
-                             WHEN plan_progress_rate1 = real_progress_rate1 AND (a.approval_yn = 'Y' or a.approval_yn = 'R')  THEN '002'
-                             WHEN plan_progress_rate1 = real_progress_rate1 and plan_progress_rate1 = 100 THEN '005'
-                             WHEN plan_progress_rate1 = real_progress_rate1 THEN '004'
-                        END
-                    )
-            END as status_cd
-            ,CASE
-                WHEN a.approval_yn = 'Y' THEN '001'
-                WHEN a.approval_yn = 'R' THEN '002'
-                ELSE '003'
-            END as approval_status_cd
-        FROM (
-            SELECT
-                a.*
-            FROM(
-                SELECT
-                    a.*,
-                    (CASE WHEN
-                        ROUND(
-                            ((case when a.workingday1 =0 then 0 else (cast(a.base_working_day1 as numeric)/a.workingday1) end) *90) +
-                            ((case when a.workingday2 =0 then 0 else (cast(a.base_working_day2 as numeric)/a.workingday2) end)*10) +
-                            ((case when a.workingday3 =0 then 0 else (cast(a.base_working_day3 as numeric)/a.workingday3) end)*0) +
-                            ((case when a.workingday4 =0 then 0 else (cast(a.base_working_day4 as numeric)/a.workingday4) end)*0)
-                         ,2)   >100 THEN  100
+     ,count(1) over() as totcnt
+     ,row_number() over(ORDER BY sub_project_order desc, l4 desc, l5 desc, coalesce(a.plan_end_dt,'') desc , a.program_id desc) as num
+FROM (
+         SELECT
+             a.*
+              ,CASE
+                   WHEN a.plan_end_dt is null or trim(a.plan_end_dt) = '' then ''
+                   when a.real_progress_rate >= 90 and '2024-07-05' > a.plan_end_dt then '완료'
+                   WHEN a.real_end_dt <> '' AND cast(a.plan_end_dt AS date) > cast(a.real_end_dt AS date) THEN '초과성과'
+                   WHEN a.real_end_dt <> '' THEN '완료'
+                   WHEN (a.real_end_dt is null or a.real_end_dt = '') and cast(a.plan_end_dt as date) < cast('2024-07-05' as date) then '지연'
+                   WHEN cast(a.plan_start_dt as date) > current_date and (a.real_start_dt is null or a.real_start_dt = '') THEN '미착수'
+                   ELSE '진행'
+             END as status_sub
+              ,CASE
+                   WHEN real_progress_rate1 = 100 AND (a.approval_yn = '' or a.approval_yn is null) AND plan_progress_rate1 < real_progress_rate1 THEN '003'
+                   WHEN real_progress_rate1 = 100 AND (a.approval_yn = '' or a.approval_yn is null) THEN '005'
+                   WHEN plan_progress_rate1 < real_progress_rate1 THEN '003'
+                   WHEN plan_progress_rate1 = 0 THEN '001'
+                   ELSE (
+                       CASE WHEN plan_progress_rate1 > real_progress_rate1 THEN '002'
+                            WHEN plan_progress_rate1 < real_progress_rate1 THEN '003'
+                            WHEN plan_progress_rate1 = real_progress_rate1 AND (a.approval_yn = 'Y' or a.approval_yn = 'R')  THEN '002'
+                            WHEN plan_progress_rate1 = real_progress_rate1 and plan_progress_rate1 = 100 THEN '005'
+                            WHEN plan_progress_rate1 = real_progress_rate1 THEN '004'
+                           END
+                       )
+             END as status_cd
+              ,CASE
+                   WHEN a.approval_yn = 'Y' THEN '001'
+                   WHEN a.approval_yn = 'R' THEN '002'
+                   ELSE '003'
+             END as approval_status_cd
+         FROM (
+                  SELECT
+                      a.*,
+                      (CASE WHEN
+                                ROUND(
+                                        ((case when a.workingday1 =0 then 0 else (cast(a.base_working_day1 as numeric)/a.workingday1) end) *90) +
+                                        ((case when a.workingday2 =0 then 0 else (cast(a.base_working_day2 as numeric)/a.workingday2) end)*10)
+                                    ,2)   >100 THEN  100
                             ELSE
-                            ROUND(
-                            ((case when a.workingday1 =0 then 0 else (cast(a.base_working_day1 as numeric)/a.workingday1) end) *90) +
-                            ((case when a.workingday2 =0 then 0 else (cast(a.base_working_day2 as numeric)/a.workingday2) end)*10) +
-                            ((case when a.workingday3 =0 then 0 else (cast(a.base_working_day3 as numeric)/a.workingday3) end)*0) +
-                            ((case when a.workingday4 =0 then 0 else (cast(a.base_working_day4 as numeric)/a.workingday4) end)*0)
-                        ,2)
-                    END ) as  plan_progress_rate1 /* 계획 기준일 기준으로 계산 한다.*/
-                FROM
-                    (
-                    SELECT
-                        a.*
-                        /*변경된 계획진척률 계산 공식 0-100*/
-                        ,case when a.plan_end_dt <= '2024-07-05' and length(a.plan_end_dt) > 0  then 90 else 0 end as tab1
-                        ,case when a.pl_plan_end_dt <= '2024-07-05' and length(a.pl_plan_end_dt) > 0  then 10 else 0 end as tab2
-                        ,case when a.test_plan_end_dt <= '2024-07-05' and length(a.test_plan_end_dt) > 0  then 0 else 0 end as tab3
-                        ,case when a.customer_plan_end_dt <= '2024-07-05' and length(a.customer_plan_end_dt) > 0  then 0 else 0 end as tab4
-                        /*변경된 계획진척률 계산 공식 0-100*/
-                        ,fn_workingday_no_rest(a.project_no,a.plan_start_dt,a.plan_end_dt) as workingday1
-                        ,case
-                            when  a.plan_end_dt < '2024-07-05'
-                            then fn_workingday_no_rest(a.project_no,a.plan_start_dt,a.plan_end_dt)
-                            else
-                                 fn_workingday_no_rest(a.project_no,a.plan_start_dt, '2024-07-05')
-                        end as base_working_day1
-                        ,fn_workingday_no_rest(a.project_no,a.pl_plan_start_dt,a.pl_plan_end_dt) as workingday2
-                        ,case
-                            when  a.pl_plan_end_dt < '2024-07-05'
-                            then fn_workingday_no_rest(a.project_no,a.pl_plan_start_dt,a.pl_plan_end_dt)
-                            else
-                                 fn_workingday_no_rest(a.project_no,a.pl_plan_start_dt, '2024-07-05')
-                        end as base_working_day2
-                        ,fn_workingday_no_rest(a.project_no,a.test_plan_start_dt,a.test_plan_end_dt) as workingday3
-                        ,case
-                            when  a.test_plan_end_dt < '2024-07-05'
-                            then fn_workingday_no_rest(a.project_no,a.test_plan_start_dt,a.test_plan_end_dt)
-                            else
-                                 fn_workingday_no_rest(a.project_no,a.test_plan_start_dt, '2024-07-05')
-                        end as base_working_day3
-                        ,fn_workingday_no_rest(a.project_no,a.customer_plan_start_dt,a.customer_plan_end_dt) as workingday4
-                        ,case
-                            when  a.customer_plan_end_dt < '2024-07-05'
-                            then fn_workingday_no_rest(a.project_no,a.customer_plan_start_dt,a.customer_plan_end_dt)
-                            else
-                                 fn_workingday_no_rest(a.project_no,a.customer_plan_start_dt, '2024-07-05')
-                        end as base_working_day4
-                        ,a.plan_start_dt as plan_start_dt1
-                        ,a.plan_end_dt as plan_end_dt1
-                        ,CASE
-                            WHEN  a.approval_yn = 'Y' THEN ( CASE WHEN a.approval_tab_id = 1 THEN trim(a.approval_real_start_dt,' ') ELSE trim(a.real_start_dt,' ') END)
-                            ELSE   trim(a.real_start_dt,' ')
-                        END as real_start_dt1
-                        ,CASE
-                            WHEN  a.approval_yn = 'Y' THEN ( CASE WHEN a.approval_tab_id = 1 THEN trim(a.approval_real_end_dt,' ') ELSE trim(a.real_end_dt,' ')   END)
-                            ELSE trim(a.real_end_dt,' ')
-                        END as real_end_dt1
-                        ,CASE WHEN a.approval_yn = 'Y' THEN COALESCE(a.approval_result_progress_rate, 0) ELSE  COALESCE(a.real_progress_rate, 0)    END as real_progress_rate1
-                        ,e.project_name as sub_project_name
-                        ,e.sub_project_order
-                    FROM
-                               tb_pj_program_list a
-                        LEFT OUTER JOIN tb_pj_project e ON a.project_no = e.project_no and a.sub_project_no = e.sub_project_no
-                     WHERE
-                        a.project_no = '20240101-D001'
-                        AND e.del_yn = 'N'
-                        and (real_progress_rate = 0 or real_progress_rate = 50 or real_progress_rate = 80)
+                                ROUND(
+                                        ((case when a.workingday1 =0 then 0 else (cast(a.base_working_day1 as numeric)/a.workingday1) end) *90) +
+                                        ((case when a.workingday2 =0 then 0 else (cast(a.base_working_day2 as numeric)/a.workingday2) end)*10)
+                                    ,2)
+                          END ) as  plan_progress_rate1 /* 계획 기준일 기준으로 계산 한다.*/
+                  FROM
+                      (
+                          SELECT
+                              a.*
+                              /*변경된 계획진척률 계산 공식 0-100*/
+                               ,case
+                                    when  a.plan_end_dt < '2024-07-05'
+                                        then fn_workingday_no_rest(a.project_no,a.plan_start_dt,a.plan_end_dt)
+                                    else
+                                        fn_workingday_no_rest(a.project_no,a.plan_start_dt, '2024-07-05')
+                              end as base_working_day1
+                               ,case
+                                    when  a.pl_plan_end_dt < '2024-07-05'
+                                        then fn_workingday_no_rest(a.project_no,a.pl_plan_start_dt,a.pl_plan_end_dt)
+                                    else
+                                        fn_workingday_no_rest(a.project_no,a.pl_plan_start_dt, '2024-07-05')
+                              end as base_working_day2
+                               ,fn_workingday_no_rest(a.project_no,a.plan_start_dt,a.plan_end_dt) as workingday1
+                               ,fn_workingday_no_rest(a.project_no,a.pl_plan_start_dt,a.pl_plan_end_dt) as workingday2
+                               ,fn_workingday_no_rest(a.project_no,a.test_plan_start_dt,a.test_plan_end_dt) as workingday3
+                               ,fn_workingday_no_rest(a.project_no,a.customer_plan_start_dt,a.customer_plan_end_dt) as workingday4
+                               ,CASE WHEN a.approval_yn = 'Y' THEN COALESCE(a.approval_result_progress_rate, 0) ELSE  COALESCE(a.real_progress_rate, 0)    END as real_progress_rate1
+                               ,e.project_name as sub_project_name
+                               ,e.sub_project_order
+                          FROM
+                              tb_pj_program_list a
+                                  LEFT OUTER JOIN tb_pj_project e ON a.project_no = e.project_no and a.sub_project_no = e.sub_project_no
+                          WHERE
+                              a.project_no = '20240101-D001'
+                            AND e.del_yn = 'N'
+                            and (real_progress_rate = 0 or real_progress_rate = 50 or real_progress_rate = 80)
                             AND   a.regist_type_div <> '003'
-                    ) a
-                )a
-            )a 
-    ) a
-    where 1=1
-)a
+                      ) a
+              )a
+     ) a
 LEFT OUTER JOIN tc_code_item b ON a.program_div = b.code_xd and a.project_no = b.project_uid and b.code_group_id = 'CG_PJGUBUN' AND b.locale_xd = 'ko_KR' and b.use_yn = 'Y' -- 프로그램 구분 코드
 LEFT OUTER JOIN tc_code_item d ON a.difficulty_div = d.code_xd and a.project_no = d.project_uid and d.code_group_id = 'CG_PJDEGREE_C_P' AND d.locale_xd = 'ko_KR' and d.use_yn = 'Y'  -- 코딩 난이도 코드
 LEFT OUTER JOIN tc_code_item k ON a.weighty_cd = k.code_xd and a.project_no = k.project_uid and k.code_group_id = 'CG_IMPORTANCE_C_P' AND k.locale_xd = 'ko_KR' and k.use_yn = 'Y' -- 코딩 중요도 코드
@@ -251,6 +198,11 @@ LEFT OUTER JOIN tc_code_item l ON a.status_cd = l.code_xd and a.project_no = l.p
 LEFT OUTER JOIN tc_code_item n ON a.approval_status_cd = n.code_xd and a.project_no = n.project_uid and n.code_group_id = 'CG_APP_STATUS' AND n.locale_xd = 'ko_KR' and n.use_yn = 'Y' -- 승인 처리 코드
 LEFT OUTER JOIN tc_code_item m ON a.regist_type_div = m.code_xd and a.project_no = m.project_uid and m.code_group_id = 'CG_INTYPE' AND m.locale_xd = 'ko_KR' and m.use_yn = 'Y' -- 등록유형 코드
 LEFT OUTER JOIN tb_pj_team_member c ON a.charger_id =  c.user_id and c.project_no = '20240101-D001' and c.sub_project_no = '0' -- 담당자 join
-LEFT OUTER JOIN tb_pj_team_member f ON a.charger_pl_id =  f.user_id and f.project_no = '20240101-D001' and f.sub_project_no = '0' 
-LEFT OUTER JOIN tb_pj_team_member g ON a.test_charger_id =  g.user_id and g.project_no = '20240101-D001' and g.sub_project_no = '0' 
-LEFT OUTER JOIN tb_pj_team_member h ON a.customer_charger_id =  h.user_id and h.project_no = '20240101-D001' and h.sub_project_no = '0' 
+LEFT OUTER JOIN tb_pj_team_member f ON a.charger_pl_id =  f.user_id and f.project_no = '20240101-D001' and f.sub_project_no = '0'
+LEFT OUTER JOIN tb_pj_team_member g ON a.test_charger_id =  g.user_id and g.project_no = '20240101-D001' and g.sub_project_no = '0'
+LEFT OUTER JOIN tb_pj_team_member h ON a.customer_charger_id =  h.user_id and h.project_no = '20240101-D001' and h.sub_project_no = '0'
+;
+
+select * from tb_pj_program_list where project_no = '20240101-D001' ;
+
+select * from tc_code_item where code_group_id = 'CG_PROGRAM_STATUS'and project_uid = '20240101-D001' and locale_xd = 'ko_KR' order by code_xd;
